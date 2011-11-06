@@ -1,0 +1,49 @@
+<style>
+.app {
+	clear: both;
+}
+.app h3 {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+.app h3 span.admin {
+	font-size: 0.8em;
+	font-weight: normal;
+}
+.types {
+	float: right;
+}
+</style>
+
+<p class="types">
+{% if type == 'app' %}
+<strong>{" Apps "}</strong> &nbsp;|&nbsp; <a href="/{{ page.id }}?type=util">{" Utilities "}</a>
+{% else %}
+<a href="/{{ page.id }}">{" Apps "}</a> &nbsp;|&nbsp; <strong>{" Utilities "}</strong>
+{% end %}
+</p>
+
+{% if num > 1 %}
+<p class="previous"><a href="/{{ page.id }}&type={{ type }}&num={{ num }}">&laquo; {" Newer apps "}</a></p>
+{% elseif num == 1 %}
+<p class="previous"><a href="/{{ page.id }}&type={{ type }}">&laquo; {" Newer apps "}</a></p>
+{% end %}
+
+{% if User::require_admin () %}
+<p><a href="/appbrowser/add?return=/{{ page.id }}">{" Add App "}</a></p>
+{% end %}
+
+{% foreach apps %}
+	<div class="app">
+		<h3><a href="{{ loop_value->link }}">{{ loop_value->name }}</a>
+		{% if User::require_admin () %}<span class="admin"><a href="/appbrowser/edit?id={{ loop_value->id }}&return=/{{ page.id }}">{" Edit "}</a> | <a href="/appbrowser/delete?id={{ loop_value->id }}&return=/{{ page.id }}" onclick="return confirm ('{" Are you sure you want to delete this app? "}')">{" Delete "}</a></span>{% end %}
+		</h3>
+		<p>{{ loop_value->description|strip_tags (%s, '<a><strong><em><b><i>') }}</p>
+	</div>
+{% end %}
+
+<br clear="both" />
+
+{% if more %}
+<p class="next"><a href="/{{ page.id }}?type={{ type }}&num={{ next }}">{" Older apps "} &raquo;</a></p>
+{% end %}
