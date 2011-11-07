@@ -1,3 +1,23 @@
+<script>
+$(function () {
+	$('.tip').hover (
+		function () {
+			this.tip = this.title;
+			$(this).append (
+				'<div class="tooltip"><div class="tooltip-top"></div>' +
+				'<div class="tooltip-body">' + this.tip + '</div></div>'
+			);
+			this.title = '';
+			$('.tooltip').fadeIn (100);
+		},
+		function () {
+			$('.tooltip').fadeOut (100);
+			$('.tooltip').remove ();
+			this.title = this.tip;
+		}
+	);
+});
+</script>
 <style>
 .app {
 	clear: both;
@@ -13,13 +33,48 @@
 .types {
 	float: right;
 }
+.tip {
+	position: relative;
+}
+.tooltip {
+	position: absolute;
+	z-index: 25;
+	display: none;
+	top: 23px;
+	width: 200px;
+	left: -80px;
+}
+	.tooltip-top {
+		height: 8px;
+		background: url(/apps/admin/css/admin/tooltip-top.png);
+		background-position: 50% 0%;
+	}
+	.tooltip-body {
+		padding: 2px 5px 0px 5px;
+		font-size: 12px;
+		color: #222;
+		font-weight: normal;
+		background-color: #fff;
+		border-left: 1px solid #222;
+		border-right: 1px solid #222;
+		border-bottom: 1px solid #222;
+		text-align: left;
+		text-decoration: none !important;
+	}
+	a.tip:hover {
+		text-decoration: none !important;
+	}
 </style>
 
 <p class="types">
 {% if type == 'app' %}
-<strong>{" Apps "}</strong> &nbsp;|&nbsp; <a href="/{{ page.id }}?type=util">{" Utilities "}</a>
+	<strong class="tip" title="{" Apps include plugins and libraries that extend the capabilities of the CMS and framework. "}">{" Apps "}</strong>
+	&nbsp;|&nbsp;
+	<a class="tip" href="/{{ page.id }}?type=util" title="{" Utilities include text editor bundles and other tools that complement the CMS and framework. "}">{" Utilities "}</a>
 {% else %}
-<a href="/{{ page.id }}">{" Apps "}</a> &nbsp;|&nbsp; <strong>{" Utilities "}</strong>
+	<a class="tip" href="/{{ page.id }}" title="{" Apps include plugins and libraries that extend the capabilities of the CMS and framework. "}">{" Apps "}</a>
+	&nbsp;|&nbsp;
+	<strong class="tip" title="{" Utilities include text editor bundles and other tools that complement the CMS and framework. "}">{" Utilities "}</strong>
 {% end %}
 </p>
 
